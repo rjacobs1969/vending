@@ -1,0 +1,174 @@
+nelmio_api_doc:
+    models: { use_jms: false }
+
+    documentation:
+        info:
+            title: API Template
+            description: This is a simple API template.
+            version: 1.0.0
+
+        # components:
+        #     securitySchemes:
+        #         Bearer:
+        #             type: http
+        #             scheme: bearer
+        #             bearerFormat: JWT
+
+
+        #     schemas:
+        #         AuthLoginRequest:
+        #             type: object
+        #             description: User credentials for `/auth/login` endpoint
+        #             required:
+        #                 - username
+        #                 - password
+        #             properties:
+        #                 username:
+        #                     type: string
+        #                     description: Username
+        #                 password:
+        #                     type: string
+        #                     description: Password
+
+        #         AuthRefreshTokenRequest:
+        #             type: object
+        #             description: Refresh token for `/auth/token/refresh` endpoint
+        #             required:
+        #                 - refresh_token
+        #             properties:
+        #                 refresh_token:
+        #                     type: string
+        #                     description: Refresh token
+
+        #         AuthTokenResponse:
+        #             type: object
+        #             description: Token response
+        #             properties:
+        #                 token:
+        #                     type: string
+        #                     description: Authentication token
+        #                 refresh_token:
+        #                     type: string
+        #                     description: Long lived refresh token to renew authentication token
+        #                 refresh_token_expiration:
+        #                     type: int
+        #                     description: Unix timestamp of refresh token expiration
+
+        #         HttpGenericResponse:
+        #             type: object
+        #             description: Http error response
+        #             properties:
+        #                 code:
+        #                     type: int
+        #                     description: Status code
+        #                 message:
+        #                     type: string
+        #                     description: Status description or message
+
+        # security:
+        #     - Bearer: []
+
+        # paths:
+        #     /auth/token/refresh:
+        #         post:
+        #             tags: [auth]
+        #             summary: Get a new token by using the long living `refresh_token`.
+        #             description: This endpoint takes a refresh token to generate a new `token` and return it with another valid `refresh_token`.
+        #             security: []
+        #             requestBody:
+        #                 required: true
+        #                 content:
+        #                     application/json:
+        #                         schema:
+        #                             $ref: '#/components/schemas/AuthRefreshTokenRequest'
+        #             responses:
+        #                 '200':
+        #                     description: Successful token refresh
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/AuthTokenResponse'
+        #                 '401':
+        #                     description: Invalid `refresh_token`
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/HttpGenericResponse'
+        #                             examples:
+        #                                 invalid_refresh_token:
+        #                                     summary: JWT Refresh Token Not Found
+        #                                     value: {"code": 401, "message": "JWT Refresh Token Not Found" }
+        #     /auth/token/invalidate:
+        #         post:
+        #             tags: [auth]
+        #             summary: Invalidate a long living `refresh_token`.
+        #             description: This endpoint takes a refresh token to implement logout functionality by invalidating it
+        #             security: []
+        #             requestBody:
+        #                 required: true
+        #                 content:
+        #                     application/json:
+        #                         schema:
+        #                             $ref: '#/components/schemas/AuthRefreshTokenRequest'
+        #             responses:
+        #                 '200':
+        #                     description: The supplied refresh_token has been invalidated
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/HttpGenericResponse'
+        #                             examples:
+        #                                 invalid_refresh_token:
+        #                                     summary: The supplied refresh_token has been invalidated.
+        #                                     value: {"code": 200, "message": "The supplied refresh_token has been invalidated." }
+        #                 '400':
+        #                     description: No refresh_token found.
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/HttpGenericResponse'
+        #                             examples:
+        #                                 invalid_refresh_token:
+        #                                     summary: No refresh_token found.
+        #                                     value: {"code": 400, "message": "No refresh_token found." }
+        #     /auth/login:
+        #         post:
+        #             tags: [auth]
+        #             summary: Get a new token by using login credentials.
+        #             description: This endpoint takes a set of valid user credentials to generate a new `token` and a long living `refresh_token`.
+        #             security: []
+        #             requestBody:
+        #                 description: User credentials
+        #                 required: true
+        #                 content:
+        #                     application/json:
+        #                         schema:
+        #                             $ref: '#/components/schemas/AuthLoginRequest'
+        #             responses:
+        #                 '200':
+        #                     description: Successful authentication
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/AuthTokenResponse'
+        #                 '401':
+        #                     description: Invalid credentials
+        #                     content:
+        #                         application/json:
+        #                             schema:
+        #                                 $ref: '#/components/schemas/HttpGenericResponse'
+        #                             examples:
+        #                                 invalid_refresh_token:
+        #                                     summary: Invalid credentials
+        #                                     value: {"code": 401, "message": "Invalid credentials" }
+        #                 '400':
+        #                     description: Bad request
+
+
+
+    areas: # to filter documented areas
+        default:
+            path_patterns:
+                - ^/api(?!/(re)?doc((\.json)|s)?$) # Accepts routes under /api except /api/doc
+                - ^/auth/
+                - ^/frontend/
