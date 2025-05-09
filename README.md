@@ -2,9 +2,7 @@
 
 A PHP coding exercise.
 
-
-
-## Instruction how to use
+## Instruction how to run the environment
 
 First run,
 
@@ -26,4 +24,8 @@ To run the unit tests
 ```bash
 make test
 ```
+# Usage
+
+After running the docker,the API can be found at http://127.0.0.1/api/docs
+
 
