@@ -13,13 +13,14 @@ final class UpdateItemQuantityUseCase
     ) {
     }
 
-    public function execute(UpdateItemQuantityDto $updateItemQuantityDto): ItemViewModel
+    public function execute(UpdateItemQuantityDto $updateItemQuantityDto): ?ItemViewModel
     {
         $item = $this->repository->findById($updateItemQuantityDto->getId());
 
         if ($item === null) {
-            throw new \DomainException('Item not found');
+            return null;
         }
+
         $item->setQuantity($updateItemQuantityDto->quantity);
         $this->repository->persist($item);
         $this->repository->flush();

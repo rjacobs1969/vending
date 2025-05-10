@@ -4,6 +4,7 @@ namespace App\Api\Dto;
 
 use App\Domain\Entity\Item;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 class UpdateItemQuantityDto
 {
@@ -22,6 +23,7 @@ class UpdateItemQuantityDto
             max: self::MAX_QUANTITY,
             notInRangeMessage: 'Quantity must be between {{ min }} and {{ max }}'
         )]
+        #[Groups(["updateQuantity"])]
         public readonly int $quantity,
     ) {
     }

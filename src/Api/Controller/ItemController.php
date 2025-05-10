@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use App\Domain\Entity\Item;
-use Doctrine\ORM\Query\AST\UpdateItem;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 class ItemController extends BaseController
 {
@@ -58,6 +58,14 @@ class ItemController extends BaseController
         description: 'Success'
     )]
     #[OA\Response(
+        response: Response::HTTP_NOT_FOUND,
+        description: 'Item not found'
+    )]
+    #[OA\Response(
+        response: Response::HTTP_UNPROCESSABLE_ENTITY,
+        description: 'Data validation error'
+    )]
+    #[OA\Response(
         response: Response::HTTP_INTERNAL_SERVER_ERROR,
         description: 'Something went wrong'
     )]
@@ -72,13 +80,25 @@ class ItemController extends BaseController
     public function updateItemQuantity(
         int $id,
         #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateItemQuantityDto $dto,
-        UpdateItemQuantityUseCase $updateItemQuantityUseCase
+        UpdateItemQuantityUseCase $updateItemQuantityUseCase,
+        ValidatorInterface $validator,
     ): JsonResponse
     {
-        $dto->setId($id);
-        $item = $updateItemQuantityUseCase->execute($dto);
+        $errors = $validator->validate($dto, null, ['Default']);
+        if (count($errors) > 0) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
-        return $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
+        try {
+            $dto->setId($id);
+            $item = $updateItemQuantityUseCase->execute($dto);
+        } catch (Throwable) {
+            return $this->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $item === null ?
+            $this->json(['error' => 'Item with id '.$id.' not found'], Response::HTTP_NOT_FOUND) :
+            $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
     }
 
 }
