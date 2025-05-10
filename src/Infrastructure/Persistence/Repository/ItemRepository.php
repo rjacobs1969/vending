@@ -12,4 +12,26 @@ class ItemRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Item::class);
     }
+
+    public function persist(Item $item): void
+    {
+        $this->getEntityManager()->persist($item);
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(int $id): ?Item
+    {
+        $item = $this->find($id);
+
+        if ($item) {
+            $this->getEntityManager()->remove($item);
+            $this->flush();
+        }
+
+        return $item;
+    }
 }
