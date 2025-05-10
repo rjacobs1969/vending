@@ -3,13 +3,24 @@
 namespace App\Tests\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ItemControllerTest extends WebTestCase
 {
-    public function testGetExampleCategories(): void
+    private $client;
+
+    protected function setUp(): void
     {
-        $client = static::createClient();
-        $response = $client->request('GET', '/api/item');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        self::ensureKernelShutdown();
+        $this->client = static::createClient();
     }
+
+    public function testGetItemList(): void
+    {
+        $this->client->request('GET', '/api/item');
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertJson($this->client->getResponse()->getContent());
+    }
+
+
 }

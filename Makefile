@@ -66,7 +66,8 @@ init: check-env down ## Initialize all environment the first time or when versio
 	$(SYMFONY_CONSOLE) cache:pool:clear --all
 	make check-mysql
 	$(SYMFONY_CONSOLE) doctrine:database:create || true
-	$(SYMFONY_CONSOLE) doctrine:migrations:migrate || true
+	$(SYMFONY_CONSOLE) doctrine:schema:create || true
+	$(SYMFONY_CONSOLE) doctrine:fixtures:load || true
 	$(SYMFONY_CONSOLE) assets:install
 	@echo "Done."
 
@@ -114,6 +115,7 @@ test: check-env ensure-php-deps ensure-running ## Run tests
 	$(DOCKER_COMPOSE_EXEC) -e APP_ENV=test backend php bin/console --env=test doctrine:database:drop --if-exists --force --no-interaction
 	$(DOCKER_COMPOSE_EXEC) -e APP_ENV=test backend php bin/console --env=test doctrine:database:create --if-not-exists --no-interaction
 	$(DOCKER_COMPOSE_EXEC) -e APP_ENV=test backend php bin/console --env=test doctrine:schema:create >/dev/null 2>/dev/null
+	$(DOCKER_COMPOSE_EXEC) -e APP_ENV=test backend php bin/console --env=test doctrine:fixtures:load --no-interaction
 	$(DOCKER_COMPOSE_EXEC) -e APP_ENV=test backend php bin/phpunit
 
 down: check-env ## Stop environment (requires environment to be running)
