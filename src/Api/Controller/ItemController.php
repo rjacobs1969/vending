@@ -2,13 +2,16 @@
 
 namespace App\Api\Controller;
 
+use App\Api\Dto\UpdateItemQuantityDto;
 use App\Application\UseCase\Item\ListItemsUseCase;
+use App\Application\UseCase\Item\UpdateItemQuantityUseCase;
 use App\Shared\Controller\BaseController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use App\Domain\Entity\Item;
+use Doctrine\ORM\Query\AST\UpdateItem;
 use OpenApi\Attributes as OA;
 
 class ItemController extends BaseController
@@ -66,9 +69,16 @@ class ItemController extends BaseController
         operationId: 'updateItemQuantity',
         summary: 'Update item quantity',
     )]
-    public function updateItemQuantity(int $id)//: JsonResponse
+    public function updateItemQuantity(
+        int $id,
+        #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateItemQuantityDto $dto,
+        UpdateItemQuantityUseCase $updateItemQuantityUseCase
+    ): JsonResponse
     {
-        //todo
+        $dto->setId($id);
+        $item = $updateItemQuantityUseCase->execute($dto);
+
+        return $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
     }
 
 }

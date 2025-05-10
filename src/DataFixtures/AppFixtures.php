@@ -12,6 +12,7 @@ class AppFixtures extends Fixture
     {
         $item = new Item('Snickers', 1.75, 10);
 
+        $item->setId(1);
         $manager->persist($item);
         $manager->flush();
     }
