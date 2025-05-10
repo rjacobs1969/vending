@@ -42,10 +42,12 @@ class ItemController extends BaseController
     {
         $items = $listItemsUseCase->execute();
 
-        return $this->json($items);
+        return $this->json($items->toArray());
     }
 
-   /* #[Route('/api/item/{id}',name: 'api_get_items', format: 'json', methods: ['POST'])]
+
+    /*
+    #[Route('/api/item/{id}',name: 'api_get_items', format: 'json', methods: ['POST'])]
     public function getCreateItem(): JsonResponse
     {
         //todo
