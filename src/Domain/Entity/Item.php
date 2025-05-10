@@ -2,11 +2,11 @@
 
 namespace App\Domain\Entity;
 
-use App\Infrastructure\Persistence\Repository\ItemRepository;
+use App\Infrastructure\Persistence\Repository\DoctrineItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ORM\Entity(repositoryClass: ItemRepository::class)]
+#[ORM\Entity(repositoryClass: DoctrineItemRepository::class)]
 #[ORM\Table(name: "items")]
 class Item {
     // Domain constraints
