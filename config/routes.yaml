@@ -4,12 +4,3 @@ api_controllers:
         namespace: App\Api\Controller
     type: attribute
 
-frontend_controllers:
-    resource:
-        path: ../src/Frontend/Controller/
-        namespace: App\Frontend\Controller
-    type: attribute
-
-api_login_check:
-    path: /auth/login
-    methods: POST

@@ -2,7 +2,7 @@ twig:
     file_name_pattern: '*.twig'
 
     paths:
-        src/Frontend/Resources/templates: 'frontend'
+        src/Api: 'frontend'
 
 when@test:
     twig:
