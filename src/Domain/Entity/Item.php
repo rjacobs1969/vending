@@ -12,8 +12,8 @@ class Item {
     // Domain constraints
     public const MIN_NAME_LENGTH = 3;
     public const MAX_NAME_LENGTH = 128;
-    public const MIN_PRICE = 0.05;
-    public const MAX_PRICE = 5.00;
+    public const MIN_PRICE = 5;
+    public const MAX_PRICE = 500;
     public const MIN_QUANTITY = 0;
     public const MAX_QUANTITY = 99;
 
@@ -28,14 +28,14 @@ class Item {
     private string $name;
 
     #[Groups(['item:read'])]
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: "integer")]
     private float $price;
 
     #[Groups(['item:read'])]
     #[ORM\Column(type: "integer")]
     private int $quantity;
 
-    public function __construct(string $name, float $price, int $quantity = self::MIN_QUANTITY)
+    public function __construct(string $name, int $price, int $quantity = self::MIN_QUANTITY)
     {
         $this->setName($name);
         $this->setPrice($price);
@@ -61,24 +61,18 @@ class Item {
 
     public function setName(string $name): static
     {
-        if (strlen($name) < self::MIN_NAME_LENGTH) {
-            throw new \DomainException('Name too short');
-        }
         $this->name = $name;
 
         return $this;
     }
 
-    public function getPrice(): float
+    public function getPrice(): int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(int $price): static
     {
-        if ($price < self::MIN_PRICE || $price > self::MAX_PRICE) {
-            throw new \DomainException('Invalid price');
-        }
         $this->price = $price;
 
         return $this;

@@ -2,7 +2,7 @@
 
 namespace App\Api\Controller;
 
-use App\Api\Dto\UpdateItemQuantityDto;
+use App\Api\Dto\UpdateCoinQuantityDto;
 use App\Application\UseCase\ListItemsUseCase;
 use App\Application\UseCase\UpdateItemQuantityUseCase;
 use App\Shared\Controller\BaseController;
@@ -14,12 +14,42 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
-class ItemController extends BaseController
+class CoinController extends BaseController
 {
     protected $jsonContext = ['groups' => ['item:read']];
 
-    #[Route('/api/item',
-        name: 'api_get_items',
+    #[Route('/api/coin',
+    name: 'api_insert_coin',
+    format: 'json',
+    methods: ['POST']
+    )]
+    #[OA\Response(
+        response: Response::HTTP_OK,
+        description: 'Success'
+    )]
+    #[OA\Response(
+        response: Response::HTTP_INTERNAL_SERVER_ERROR,
+        description: 'Something went wrong'
+    )]
+    #[OA\Tag(
+        name: 'Actions'
+    )]
+    #[OA\Post(
+        description: 'Insert a coin into the vending machine',
+        operationId: 'insertCoin',
+        summary: 'Insert a coin into the vending machine',
+    )]
+    public function insertCoin(
+        ListItemsUseCase $listItemsUseCase
+    ): JsonResponse
+    {
+        $items = $listItemsUseCase->execute();
+
+        return $this->json($items->toArray());
+    }
+
+    #[Route('/api/coin',
+        name: 'api_get_coins',
         format: 'json',
         methods: ['GET']
     )]
@@ -35,11 +65,11 @@ class ItemController extends BaseController
         name: 'Info'
     )]
     #[OA\Get(
-        description: 'List of items with price and availability',
-        operationId: 'getItems',
-        summary: 'List items',
+        description: 'List of coins available for change',
+        operationId: 'getCoins',
+        summary: 'List coins',
     )]
-    public function getItems(
+    public function getCoins(
         ListItemsUseCase $listItemsUseCase
     ): JsonResponse
     {
@@ -48,10 +78,10 @@ class ItemController extends BaseController
         return $this->json($items->toArray());
     }
 
-    #[Route('/api/service/item/{id}',
-        name: 'api_update_quantity',
+    #[Route('/api/service/coin',
+        name: 'api_update_coin_quantity',
         format: 'json',
-        methods: ['PATCH']
+        methods: ['PUT']
     )]
     #[OA\Response(
         response: Response::HTTP_OK,
@@ -72,33 +102,33 @@ class ItemController extends BaseController
     #[OA\Tag(
         name: 'Service'
     )]
-    #[OA\Patch(
-        description: 'Update item quantity',
-        operationId: 'updateItemQuantity',
-        summary: 'Update item quantity',
+    #[OA\Put(
+        description: 'Update coin quantity available for change',
+        operationId: 'updateCoinQuantity',
+        summary: 'Update coin quantity available for change',
     )]
-    public function updateItemQuantity(
-        int $id,
-        #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateItemQuantityDto $dto,
+    public function updateCoinQuantity(
+        #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateCoinQuantityDto $dto,
         UpdateItemQuantityUseCase $updateItemQuantityUseCase,
         ValidatorInterface $validator,
     ): JsonResponse
     {
-        $errors = $validator->validate($dto, null, ['Default']);
+        $errors = $validator->validate($dto, null, ['Default', 'updateQuantity']);
         if (count($errors) > 0) {
             return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         try {
-            $dto->setId($id);
-            $item = $updateItemQuantityUseCase->execute($dto);
+           // $dto->setId($id);
+           // $item = $updateItemQuantityUseCase->execute($dto);
         } catch (Throwable) {
             return $this->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $item === null ?
-            $this->json(['error' => 'Item with id '.$id.' not found'], Response::HTTP_NOT_FOUND) :
-            $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
+        return $this->json([]);
+        //$item === null ?
+        //    $this->json(['error' => 'Item with id '.$id.' not found'], Response::HTTP_NOT_FOUND) :
+        //    $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
     }
 
 }

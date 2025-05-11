@@ -10,7 +10,7 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $item = new Item('Snickers', 1.75, 10);
+        $item = new Item('Snickers', 175, 10);
 
         $item->setId(1);
         $manager->persist($item);

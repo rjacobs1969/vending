@@ -31,7 +31,7 @@ class ItemViewModel
         return new self(
             $item->getId(),
             $item->getName(),
-            $item->getPrice(),
+            $item->getPrice()/100,
             $item->getQuantity()
         );
     }
