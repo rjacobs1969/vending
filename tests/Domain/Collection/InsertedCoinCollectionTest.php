@@ -63,7 +63,9 @@ class InsertedCoinCollectionTest extends TestCase
         $collection->add($coin1);
         $collection->add($coin2);
 
-        $this->assertEquals(['0.25', '1.00'], $collection->getCoins());
+        $this->assertCount(2, $collection);
+        $this->assertEquals(0.25, $collection->getCoins()[0]->asFloat());
+        $this->assertEquals(1.00, $collection->getCoins()[1]->asFloat());
     }
 
     public function testToJson(): void
@@ -83,8 +85,8 @@ class InsertedCoinCollectionTest extends TestCase
         $collection = InsertedCoinCollection::fromJson($json);
 
         $this->assertCount(3, $collection);
-        $this->assertEquals(0.25, $collection->getCoins()[0]);
-        $this->assertEquals(1.00, $collection->getCoins()[1]);
-        $this->assertEquals(0.10, $collection->getCoins()[2]);
+        $this->assertEquals(0.25, $collection->getCoins()[0]->asFloat());
+        $this->assertEquals(1.00, $collection->getCoins()[1]->asFloat());
+        $this->assertEquals(0.10, $collection->getCoins()[2]->asFloat());
     }
 }
