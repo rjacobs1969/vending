@@ -28,7 +28,9 @@ final class InsertedCoinCollection implements \IteratorAggregate {
     }
 
     public function totalAmount(): float {
-        return array_reduce($this->coins, fn($sum, $coin) => $sum + $coin->asFloat(), 0);
+        $sum = array_reduce($this->coins, fn($sum, $coin) => $sum + $coin->asFloat(), 0);
+
+        return round($sum, 2);
     }
 
     public function getCoins(): array
