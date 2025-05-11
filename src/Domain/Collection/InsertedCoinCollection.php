@@ -55,11 +55,11 @@ final class InsertedCoinCollection implements \IteratorAggregate {
 
     public static function fromJson(string $json): self
     {
+        $coins = [];
         $data = json_decode($json, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \InvalidArgumentException("Invalid JSON data");
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $coins = array_map(fn($value) => Coin::from($value), $data);
         }
-        $coins = array_map(fn($value) => Coin::from($value), $data);
 
         return new self($coins);
     }

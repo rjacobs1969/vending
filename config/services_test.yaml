@@ -1,0 +1,76 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    app.base_url: '%env(resolve:APP_URL)%'
+    app.http_proxy: '%env(resolve:HTTP_PROXY)%'
+    app.https_proxy: '%env(resolve:HTTPS_PROXY)%'
+    app.no_proxy: '%env(resolve:NO_PROXY)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind: # see https://medium.com/@votanlean/symfony-parameters-and-environment-variables-ac916524ab49 https://symfony.com/doc/current/configuration.html
+            #$baseUrl: '%app.base_url%'
+            $container: '@Psr\Container\ContainerInterface'
+        #public: true
+
+    # Redis Connection
+    Redis:
+        class: Redis
+        calls:
+            - connect:
+                - '%env(resolve:REDIS_HOST)%'
+                - '%env(resolve:REDIS_PORT)%'
+
+    # Redis Repository Implementation
+    App\Shared\Repository\EphemeralPersistence:
+        class: App\Shared\Repository\RedisRepository
+        arguments:
+            $redisConnection: '@Redis'
+
+    # Transaction Repository for Test Environment
+    App\Domain\Repository\TransactionRepository:
+        class: App\Infrastructure\Persistence\Repository\RedisTransactionRepository
+        arguments:
+            $environment: 'test'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Kernel.php'
+            - '../src/Auth/Entity/'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    # get_set_method_normalizer:
+    #     class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+    #     tags: [serializer.normalizer]
+
+    # serializer:
+    #     class: Symfony\Component\Serializer\Serializer
+    #     arguments:
+    #         - []
+    #         - []
+    #     # arguments:
+    #     #     #- ['@get_set_method_normalizer']
+    #     #     - []
+    #     #     - ['Symfony\Component\Serializer\Encoder\JsonEncoder']
+
+    Symfony\Component\Uid\UuidV4:
+        factory: ['Symfony\Component\Uid\Uuid', 'v4']
+
+    # App\Auth\EventListener\AuthenticationEventListener: ~
+
+        # tags:
+        #     - { name: kernel.event_listener, event: kernel.request }
+        #     - { name: kernel.event_listener, event: kernel.response }
+

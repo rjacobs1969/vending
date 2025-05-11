@@ -2,7 +2,9 @@
 
 namespace App\Api\Controller;
 
+use App\Api\Dto\InsertCoinDto;
 use App\Api\Dto\UpdateCoinQuantityDto;
+use App\Application\UseCase\InsertCoinUseCase;
 use App\Application\UseCase\ListItemsUseCase;
 use App\Application\UseCase\UpdateItemQuantityUseCase;
 use App\Shared\Controller\BaseController;
@@ -40,12 +42,19 @@ class CoinController extends BaseController
         summary: 'Insert a coin',
     )]
     public function insertCoin(
-        ListItemsUseCase $listItemsUseCase
+        #[MapRequestPayload(validationGroups: ['create'])] InsertCoinDto $dto,
+        InsertCoinUseCase $insertCoinUseCase,
+        ValidatorInterface $validator,
     ): JsonResponse
     {
-        $items = $listItemsUseCase->execute();
+        $errors = $validator->validate($dto, null, ['Default', 'create']);
+        if (count($errors) > 0) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
-        return $this->json($items->toArray());
+        $credit = $insertCoinUseCase->execute($dto);
+
+        return $this->json(["inserted_amount" => $credit]);
     }
 
     #[Route('/api/coin',

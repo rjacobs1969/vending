@@ -2,20 +2,24 @@
 
 namespace App\Application\UseCase;
 
+use App\Api\Dto\InsertCoinDto;
 use App\Application\ViewModel\Item\ItemListViewModel;
-use App\Domain\Repository\ItemRepository;
+use App\Domain\Repository\TransactionRepository;
 
 final class InsertCoinUseCase
 {
-   /* public function __construct(
-        private ItemRepository $repository,
+    public function __construct(
+        private TransactionRepository $repository,
     ) {
     }
 
-    public function execute(): ItemListViewModel
+    public function execute(InsertCoinDto $insertCoinDto): float
     {
-        $itemList = $this->repository->findAll();
+        $coin = $insertCoinDto->toCoin();
+        $insertedCoinCollection = $this->repository->fetchTransaction();
+        $insertedCoinCollection->add($coin);
+        $this->repository->saveTransaction($insertedCoinCollection);
 
-        return ItemListViewModel::fromItemList($itemList);
-    }*/
+        return $insertedCoinCollection->totalAmount();
+    }
 }
