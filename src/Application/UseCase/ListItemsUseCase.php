@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\UseCase\Item;
+namespace App\Application\UseCase;
 
 use App\Application\ViewModel\Item\ItemListViewModel;
 use App\Domain\Repository\ItemRepository;

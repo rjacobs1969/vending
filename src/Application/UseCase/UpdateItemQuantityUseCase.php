@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\UseCase\Item;
+namespace App\Application\UseCase;
 
 use App\Api\Dto\UpdateItemQuantityDto;
 use App\Application\ViewModel\Item\ItemViewModel;
