@@ -48,20 +48,18 @@ class CoinControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($response['inserted_amount'], $originalAmount + 0.10);
+        $this->assertEquals(round($response['inserted_amount'],2), round($originalAmount + 0.10, 2));
     }
 
-
-
-
-   /*public function testUpdateItemQuantity(): void
+    public function testReturnCoin(): void
     {
-        $this->doRequest("/api/service/item/1", json_encode(['quantity' => 12,]));
+        $this->doRequest("/api/coin/return", '{}');
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($content['quantity_available'], 12);
-    }*/
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('coins', $response);
+        $this->assertNotEmpty($response['coins']);
+    }
 
     private function doRequest(string $url, string $content, string $requestMethod = 'POST'): void
     {
