@@ -11,7 +11,7 @@ enum Coin: int
 
     public function asFloat(): float
     {
-        return $this->value / 100;
+        return round($this->value / 100, 2);
     }
 
     public function asCurrency(): string
