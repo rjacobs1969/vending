@@ -37,7 +37,7 @@ class CoinController extends BaseController
     #[OA\Post(
         description: 'Insert a coin into the vending machine',
         operationId: 'insertCoin',
-        summary: 'Insert a coin into the vending machine',
+        summary: 'Insert a coin',
     )]
     public function insertCoin(
         ListItemsUseCase $listItemsUseCase
@@ -105,7 +105,7 @@ class CoinController extends BaseController
     #[OA\Put(
         description: 'Update coin quantity available for change',
         operationId: 'updateCoinQuantity',
-        summary: 'Update coin quantity available for change',
+        summary: 'Update coin quantity',
     )]
     public function updateCoinQuantity(
         #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateCoinQuantityDto $dto,
