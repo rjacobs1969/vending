@@ -3,7 +3,6 @@
 namespace App\Application\UseCase;
 
 use App\Api\Dto\InsertCoinDto;
-use App\Application\ViewModel\Item\ItemListViewModel;
 use App\Domain\Repository\TransactionRepository;
 
 final class InsertCoinUseCase
