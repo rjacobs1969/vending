@@ -38,6 +38,14 @@ class CoinCollection implements \IteratorAggregate {
         return $this->coins;
     }
 
+    public function returnAllCoins(): array
+    {
+        $coins = $this->getCoins();
+        $this->empty();
+
+        return $coins;
+    }
+
     public function getIterator(): \Traversable {
         return new \ArrayIterator($this->coins);
     }

@@ -3,7 +3,6 @@
 namespace App\Application\UseCase;
 
 use App\Application\ViewModel\Coin\CoinListViewModel;
-use App\Application\ViewModel\Coin\CoinViewModel;
 use App\Domain\Collection\ReturnCoinCollection;
 use App\Domain\Repository\TransactionRepository;
 
@@ -17,10 +16,7 @@ final class ReturnCoinsUseCase
     public function execute(): CoinListViewModel
     {
         $insertedCoinCollection = $this->repository->fetchTransaction();
-        $returnCoinCollection = new ReturnCoinCollection(
-            $insertedCoinCollection->getCoins()
-        );
-        $insertedCoinCollection->empty();
+        $returnCoinCollection = new ReturnCoinCollection($insertedCoinCollection->returnAllCoins());
         $this->repository->saveTransaction($insertedCoinCollection);
 
         return CoinListViewModel::fromCoinCollection($returnCoinCollection);

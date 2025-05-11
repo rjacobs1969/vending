@@ -18,6 +18,9 @@ class CoinController extends BaseController
 {
     protected $jsonContext = ['groups' => ['item:read']];
 
+    /****************************************
+     * Insert a coin into the vending machine
+     ****************************************/
     #[Route('/api/coin', methods: ['POST'], name: 'api_insert_coin', format: 'json')]
     #[OA\Tag(name: 'Actions')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
@@ -40,6 +43,9 @@ class CoinController extends BaseController
         return $this->json(["inserted_amount" => $credit]);
     }
 
+    /****************************************************
+     * Return all coins inserted into the vending machine
+     ****************************************************/
     #[Route('/api/coin/return', methods: ['POST'], name: 'api_return_coin', format: 'json')]
     #[OA\Tag(name: 'Actions')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
@@ -51,18 +57,21 @@ class CoinController extends BaseController
 
         return $this->json(
             [
-                'message' => $returnedCoins->count().' coins returned successfully',
+                'message' => $returnedCoins->isEmpty() ? 'No coins to return' : $returnedCoins->count().' coins returned successfully',
                 'item' => null,
                 'coins' => $returnedCoins->toArray(),
                 'amount_returned' => $returnedCoins->totalAmount(),
             ],);
     }
 
+    /******************************************************
+     * Get the total amount of the currently inserted coins
+     ******************************************************/
     #[Route('/api/coin/total', methods: ['GET'], name: 'api_total_coin', format: 'json')]
     #[OA\Tag(name: 'Info')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
     #[OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong')]
-    #[OA\Post(summary: 'Get inserted amount', description: 'Get the currently inserted coins and total amount',operationId: 'getCoin')]
+    #[OA\Post(summary: 'Get inserted amount', description: 'Get the total amount of the currently inserted coins', operationId: 'getCoin')]
     public function viewCoin(GetTotalInsertedAmountUseCase $getTotalInsertedAmountUse): JsonResponse
     {
         $credit = $getTotalInsertedAmountUse->execute();

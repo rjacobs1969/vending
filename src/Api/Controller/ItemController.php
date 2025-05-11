@@ -18,6 +18,9 @@ class ItemController extends BaseController
 {
     protected $jsonContext = ['groups' => ['item:read']];
 
+    /********************************************
+     * List all items with price and availability
+     ********************************************/
     #[Route('/api/item', methods: ['GET'], name: 'api_get_items', format: 'json',)]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
     #[OA\Response( response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong' )]
@@ -30,6 +33,9 @@ class ItemController extends BaseController
         return $this->json($items->toArray());
     }
 
+    /**********************
+     * Update item quantity
+     **********************/
     #[Route('/api/service/item/{id}', name: 'api_update_quantity', format: 'json', methods: ['PATCH'] )]
     #[OA\Response( response: Response::HTTP_OK, description: 'Success' )]
     #[OA\Response( response: Response::HTTP_NOT_FOUND, description: 'Item not found' )]
@@ -52,13 +58,14 @@ class ItemController extends BaseController
         try {
             $dto->setId($id);
             $item = $updateItemQuantityUseCase->execute($dto);
+            if ($item === null) {
+                return $this->json( ['error' => sprintf('Item with id %d not found', $id)], Response::HTTP_NOT_FOUND );
+            }
+
+            return $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
         } catch (Throwable) {
             return $this->json([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return $item === null ?
-            $this->json(['error' => 'Item with id '.$id.' not found'], Response::HTTP_NOT_FOUND) :
-            $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
     }
 
 }
