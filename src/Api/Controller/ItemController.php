@@ -18,65 +18,25 @@ class ItemController extends BaseController
 {
     protected $jsonContext = ['groups' => ['item:read']];
 
-    #[Route('/api/item',
-        name: 'api_get_items',
-        format: 'json',
-        methods: ['GET']
-    )]
-    #[OA\Response(
-        response: Response::HTTP_OK,
-        description: 'Success'
-    )]
-    #[OA\Response(
-        response: Response::HTTP_INTERNAL_SERVER_ERROR,
-        description: 'Something went wrong'
-    )]
-    #[OA\Tag(
-        name: 'Info'
-    )]
-    #[OA\Get(
-        description: 'List of items with price and availability',
-        operationId: 'getItems',
-        summary: 'List items',
-    )]
-    public function getItems(
-        ListItemsUseCase $listItemsUseCase
-    ): JsonResponse
+    #[Route('/api/item', methods: ['GET'], name: 'api_get_items', format: 'json',)]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
+    #[OA\Response( response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong' )]
+    #[OA\Tag( name: 'Info' )]
+    #[OA\Get( description: 'List of items with price and availability', operationId: 'getItems', summary: 'List items', )]
+    public function getItems( ListItemsUseCase $listItemsUseCase ): JsonResponse
     {
         $items = $listItemsUseCase->execute();
 
         return $this->json($items->toArray());
     }
 
-    #[Route('/api/service/item/{id}',
-        name: 'api_update_quantity',
-        format: 'json',
-        methods: ['PATCH']
-    )]
-    #[OA\Response(
-        response: Response::HTTP_OK,
-        description: 'Success'
-    )]
-    #[OA\Response(
-        response: Response::HTTP_NOT_FOUND,
-        description: 'Item not found'
-    )]
-    #[OA\Response(
-        response: Response::HTTP_UNPROCESSABLE_ENTITY,
-        description: 'Data validation error'
-    )]
-    #[OA\Response(
-        response: Response::HTTP_INTERNAL_SERVER_ERROR,
-        description: 'Something went wrong'
-    )]
-    #[OA\Tag(
-        name: 'Service'
-    )]
-    #[OA\Patch(
-        description: 'Update item quantity',
-        operationId: 'updateItemQuantity',
-        summary: 'Update item quantity',
-    )]
+    #[Route('/api/service/item/{id}', name: 'api_update_quantity', format: 'json', methods: ['PATCH'] )]
+    #[OA\Response( response: Response::HTTP_OK, description: 'Success' )]
+    #[OA\Response( response: Response::HTTP_NOT_FOUND, description: 'Item not found' )]
+    #[OA\Response( response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Data validation error' )]
+    #[OA\Response( response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong' )]
+    #[OA\Tag( name: 'Service' )]
+    #[OA\Patch( description: 'Update item quantity', operationId: 'updateItemQuantity', summary: 'Update item quantity', )]
     public function updateItemQuantity(
         int $id,
         #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateItemQuantityDto $dto,
