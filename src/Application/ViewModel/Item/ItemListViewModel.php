@@ -21,6 +21,11 @@ class ItemListViewModel
         );
     }
 
+    public static function fromItem(Item $item): self
+    {
+        return new self([ItemViewModel::fromItem($item)]);
+    }
+
     public static function fromItemList(array $items): self
     {
         $itemViewModels = array_map(
