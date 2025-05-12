@@ -53,15 +53,9 @@ class CoinController extends BaseController
     #[OA\Post(summary: 'Return coins', description: 'Return all coins inserted into the vending machine',operationId: 'returnCoin')]
     public function returnCoin(ReturnCoinsUseCase $returnCoinsUseCase): JsonResponse
     {
-        $returnedCoins = $returnCoinsUseCase->execute();
+        $response = $returnCoinsUseCase->execute();
 
-        return $this->json(
-            [
-                'message' => $returnedCoins->isEmpty() ? 'No coins to return' : $returnedCoins->count().' coins returned successfully',
-                'item' => null,
-                'coins' => $returnedCoins->toArray(),
-                'amount_returned' => $returnedCoins->totalAmount(),
-            ],);
+        return $this->json($response->toArray());
     }
 
     /******************************************************
