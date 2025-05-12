@@ -10,10 +10,13 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $item = new Item('Snickers', 175, 10);
+        $water = (new Item('Water', 65, 0))->setId(1);
+        $juice = (new Item('Juice', 100, 0))->setId(2);
+        $soda = (new Item('Soda', 150, 0))->setId(3);
 
-        $item->setId(1);
-        $manager->persist($item);
+        $manager->persist($water);
+        $manager->persist($juice);
+        $manager->persist($soda);
         $manager->flush();
     }
 }
