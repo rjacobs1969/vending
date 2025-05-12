@@ -19,6 +19,11 @@ class DoctrineItemRepository extends ServiceEntityRepository implements ItemRepo
         return $this->find($id);
     }
 
+    public function findByName(string $itemName): ?Item
+    {
+        return $this->findOneBy(['name' => $itemName]);
+    }
+
     public function persist(Item $item): void
     {
         $this->getEntityManager()->persist($item);
