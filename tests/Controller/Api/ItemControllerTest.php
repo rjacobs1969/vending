@@ -24,7 +24,7 @@ class ItemControllerTest extends WebTestCase
 
     public function testUpdateItemQuantity(): void
     {
-        $this->doRequest("/api/service/item/1", json_encode(['quantity' => 12,]));
+        $this->doRequest("/api/service/item/Water", json_encode(['quantity' => 12,]));
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $content = json_decode($this->client->getResponse()->getContent(), true);

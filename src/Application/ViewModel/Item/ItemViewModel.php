@@ -14,12 +14,11 @@ class ItemViewModel
     ) {}
 
     /**
-     * @return array{id: int, name: string, price: string, quantity_available: int}
+     * @return array{name: string, price: string, quantity_available: int}
      */
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
             'price' => $this->formatPrice($this->price),
             'quantity_available' => $this->quantity,

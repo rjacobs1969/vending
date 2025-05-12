@@ -12,6 +12,7 @@ class UpdateItemQuantityDto
     private const MAX_QUANTITY = Item::MAX_QUANTITY;
 
     private $id;
+    private $name;
 
     public function __construct(
         #[Assert\Type(
@@ -26,6 +27,20 @@ class UpdateItemQuantityDto
         #[Groups(["updateQuantity"])]
         public readonly int $quantity,
     ) {
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        if (strlen($name) < Item::MIN_NAME_LENGTH || strlen($name) > Item::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Name must be between ' . Item::MIN_NAME_LENGTH . ' and ' . Item::MAX_NAME_LENGTH . ' characters');
+        }
+        $this->name = $name;
+        return $this;
     }
 
     public function setId(int $id): self

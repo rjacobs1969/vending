@@ -36,7 +36,7 @@ class ItemController extends BaseController
     /**********************
      * Update item quantity
      **********************/
-    #[Route('/api/service/item/{id}', name: 'api_update_quantity', format: 'json', methods: ['PATCH'] )]
+    #[Route('/api/service/item/{name}', name: 'api_update_quantity', format: 'json', methods: ['PATCH'] )]
     #[OA\Response( response: Response::HTTP_OK, description: 'Success' )]
     #[OA\Response( response: Response::HTTP_NOT_FOUND, description: 'Item not found' )]
     #[OA\Response( response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Data validation error' )]
@@ -44,7 +44,7 @@ class ItemController extends BaseController
     #[OA\Tag( name: 'Service' )]
     #[OA\Patch( description: 'Update item quantity', operationId: 'updateItemQuantity', summary: 'Update item quantity', )]
     public function updateItemQuantity(
-        int $id,
+        string $name,
         #[MapRequestPayload(validationGroups: ['updateQuantity'])] UpdateItemQuantityDto $dto,
         UpdateItemQuantityUseCase $updateItemQuantityUseCase,
         ValidatorInterface $validator,
@@ -56,7 +56,8 @@ class ItemController extends BaseController
         }
 
         try {
-            $dto->setId($id);
+          //  $dto->setId($id);
+            $dto->setName($name);
             $item = $updateItemQuantityUseCase->execute($dto);
             if ($item === null) {
                 return $this->json( ['error' => sprintf('Item with id %d not found', $id)], Response::HTTP_NOT_FOUND );

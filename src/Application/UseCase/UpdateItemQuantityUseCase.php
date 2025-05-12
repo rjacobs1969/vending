@@ -15,7 +15,7 @@ final class UpdateItemQuantityUseCase
 
     public function execute(UpdateItemQuantityDto $updateItemQuantityDto): ?ItemViewModel
     {
-        $item = $this->repository->findById($updateItemQuantityDto->getId());
+        $item = $this->repository->findByName($updateItemQuantityDto->getName());
 
         if ($item === null) {
             return null;
