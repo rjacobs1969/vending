@@ -35,7 +35,12 @@ final class VendItemUseCase
 
         $itemPrice = $item->getPriceAsFloat();
         if ($insertedCoinCollection->totalAmount() < $itemPrice) {
-            return VendViewModel::fromMessage(VendViewModel::MESSAGE_NOT_ENOUGH_MONEY);
+            return VendViewModel::fromMessage(
+                sprintf(
+                    VendViewModel::MESSAGE_NOT_ENOUGH_MONEY,
+                    number_format($itemPrice - $insertedCoinCollection->totalAmount(), 2, '.', '')
+                )
+            );
         }
 
         $changeNeeded = $insertedCoinCollection->totalAmount() - $itemPrice;

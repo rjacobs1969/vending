@@ -8,7 +8,7 @@ use App\Application\ViewModel\Item\ItemViewModel;
 class VendViewModel
 {
     public const MESSAGE_ITEM_NOT_FOUND = 'Item not found in this vending machine';
-    public const MESSAGE_NOT_ENOUGH_MONEY = 'Not enough money, please insert more coins';
+    public const MESSAGE_NOT_ENOUGH_MONEY = 'Not enough money, please insert at least %s more';
     public const MESSAGE_ITEM_NOT_AVAILABLE = 'Item out of stock, please select another item';
     public const MESSAGE_NO_CHANGE = 'No change available, use exact amount';
     public const MESSAGE_ITEM_VENDED = 'Item vended, please take your item';
