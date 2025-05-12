@@ -1,0 +1,35 @@
+{% extends '@!NelmioApiDoc/SwaggerUi/index.html.twig' %}
+
+{% block header %}
+{{ parent() }}
+<style>
+    .swagger-ui textarea {
+        min-height: 40px;
+        resize: none; /* Disable manual resizing */
+        overflow-y: hidden; /* Hide scrollbar when not needed */
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".swagger-ui textarea").forEach(textarea => {
+            textarea.addEventListener("input", function () {
+                this.style.height = "auto"; // Reset height
+                this.style.height = this.scrollHeight + "px"; // Expand based on content
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+
+{% block swagger_initialization %}
+<script type="text/javascript">
+    window.onload = () => {
+        loadSwaggerUI({
+            defaultModelsExpandDepth: -1,
+            deepLinking: true,
+            tryItOutEnabled: true // Enables "Try it out" by default
+        });
+    };
+</script>
+{% endblock %}
