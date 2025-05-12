@@ -25,7 +25,12 @@ class VendingController extends BaseController
      ***************************************/
     #[Route('/api/vend', methods: ['POST'], name: 'api_vend', format: 'json',)]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
-    #[OA\Response( response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong' )]
+    #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Input data validation error')]
+    #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Unkown Item')]
+    #[OA\Response(response: Response::HTTP_PAYMENT_REQUIRED, description: 'Not enough money')]
+    #[OA\Response(response: Response::HTTP_CONFLICT, description: 'No change available')]
+    #[OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong' )]
+    #[OA\Response(response: Response::HTTP_SERVICE_UNAVAILABLE, description: 'Item out of stock')]
     #[OA\Tag( name: 'Actions' )]
     #[OA\Post( description: 'Vend an item from the vending machine', operationId: 'vendItem', summary: 'Get an item', )]
     public function vendItem(
@@ -33,8 +38,8 @@ class VendingController extends BaseController
         VendItemUseCase $vendItemUseCase,
     ): JsonResponse
     {
-        $items = $vendItemUseCase->execute($dto);
+        $result = $vendItemUseCase->execute($dto);
 
-        return $this->json($items->toArray());
+        return $this->json($result->toArray(), $result->toStatus());
     }
 }
