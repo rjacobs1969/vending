@@ -36,6 +36,11 @@ class ItemViewModel
         );
     }
 
+    public function toString(): string
+    {
+        return $this->name;
+    }
+
     private function formatPrice(float $price): string
     {
         return number_format($price, 2, '.', '');
