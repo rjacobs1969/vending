@@ -38,17 +38,16 @@ class CoinControllerTest extends WebTestCase
 
     public function testAvailableAmountIncreasesWhenCoinInserted(): void
     {
-        $this->doRequest("/api/coin", '{"coin": 0.05}');
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
-        $originalAmount = $response['inserted_amount'];
+        $originalAmount = 0.05;
+        $addAmount = 0.10;
 
-        $this->doRequest("/api/coin", '{"coin": 0.10}');
+        $this->doRequest("/api/coin/return", '{}'); // empty the machine first
+        $this->doRequest("/api/coin", '{"coin": '. $originalAmount. '}');
+        $this->doRequest("/api/coin", '{"coin": '. $addAmount .'}');
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(round($response['inserted_amount'],2), round($originalAmount + 0.10, 2));
+        $this->assertEquals(round($originalAmount + $addAmount, 2), round( $response['inserted_amount'],2));
     }
 
     public function testReturnCoin(): void
