@@ -71,7 +71,7 @@ class CoinController extends BaseController
     #[OA\Tag(name: 'Info')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
     #[OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong')]
-    #[OA\Post(summary: 'Get inserted amount', description: 'Get the total amount of the currently inserted coins', operationId: 'getCoin')]
+    #[OA\Get(summary: 'Get inserted amount', description: 'Get the total amount of the currently inserted coins', operationId: 'getCoin')]
     public function viewCoin(GetTotalInsertedAmountUseCase $getTotalInsertedAmountUse): JsonResponse
     {
         $credit = $getTotalInsertedAmountUse->execute();

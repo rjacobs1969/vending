@@ -3,7 +3,6 @@
 namespace App\Domain\Collection;
 
 use App\Domain\ValueObject\Coin;
-use JsonSerializable;
 
 final class ChangeCoinCollection
 {
@@ -25,6 +24,11 @@ final class ChangeCoinCollection
     {
         $this->validateCoinValue($coin);
         $this->setCoinAmount($coin, $this->getCoinAmount($coin) + 1);
+    }
+
+    public function getChangeCoinsAvailable(): array
+    {
+        return $this->changeCoinsAvailable;
     }
 
     public function getCoinAmount(Coin $coin): int
@@ -85,37 +89,6 @@ final class ChangeCoinCollection
             if ($coinsUsed > 0) {
                 $change[$coinValue] = $coinsUsed;
                 $remainingAmount -= $coinsUsed * $coinValue;
-            }
-        }
-
-        return $change;
-    }
-
-
-
-    public function provideChangeOrd(float $amount): array
-    {
-        $remainingAmount = (int) ($amount * 100); // Convert to cents
-        $change = [];
-
-        foreach ($this->changeCoinsAvailable as $coinValue => $available) {
-            if ($available <= 0 || $remainingAmount <= 0) {
-                continue;
-            }
-
-            $coinsNeeded = min(
-                (int)($remainingAmount / $coinValue), // How many coins we need
-                $available // How many coins we have
-            );
-
-            if ($coinsNeeded > 0) {
-                $coin = Coin::from($coinValue);
-                // Add the coin multiple times based on coinsNeeded
-                for ($i = 0; $i < $coinsNeeded; $i++) {
-                    $change[] = $coin;
-                }
-                $this->setCoinAmount($coin, $available - $coinsNeeded);
-                $remainingAmount -= $coinsNeeded * $coinValue;
             }
         }
 
