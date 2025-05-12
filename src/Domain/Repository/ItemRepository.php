@@ -13,6 +13,8 @@ interface ItemRepository
 
     public function findById(int $id): ?Item;
 
+    public function findByName(string $name): ?Item;
+
     public function persist(Item $item): void;
 
     public function flush(): void;
