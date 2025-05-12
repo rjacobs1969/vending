@@ -30,6 +30,7 @@ class UpdateItemQuantityDto
         #[OA\Property(example: 10)]
         public readonly int $quantity,
     ) {
+        $this->validate();
     }
 
     public function getName(): ?string
@@ -39,21 +40,17 @@ class UpdateItemQuantityDto
 
     public function setName(string $name): self
     {
+        if (strlen($name) < self::MIN_NAME_LENGTH || strlen($name) > self::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException(
+                'Name must be between ' . self::MIN_NAME_LENGTH . ' and ' . self::MAX_NAME_LENGTH . ' characters'
+            );
+        }
         $this->name = $name;
-        $this->validate();
         return $this;
     }
 
     private function validate(): void
     {
-        if (empty($this->name)) {
-            throw new \InvalidArgumentException('Name cannot be empty');
-        }
-        if (strlen($this->name) < self::MIN_NAME_LENGTH || strlen($this->name) > self::MAX_NAME_LENGTH) {
-            throw new \InvalidArgumentException(
-                'Name must be between ' . self::MIN_NAME_LENGTH . ' and ' . self::MAX_NAME_LENGTH . ' characters'
-            );
-        }
         if ($this->quantity < self::MIN_QUANTITY || $this->quantity > self::MAX_QUANTITY) {
             throw new \InvalidArgumentException(
                 'Quantity must be between ' . self::MIN_QUANTITY . ' and ' . self::MAX_QUANTITY
