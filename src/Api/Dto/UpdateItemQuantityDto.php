@@ -3,6 +3,7 @@
 namespace App\Api\Dto;
 
 use App\Domain\Entity\Item;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -10,8 +11,9 @@ class UpdateItemQuantityDto
 {
     private const MIN_QUANTITY = Item::MIN_QUANTITY;
     private const MAX_QUANTITY = Item::MAX_QUANTITY;
+    private const MIN_NAME_LENGTH = Item::MIN_NAME_LENGTH;
+    private const MAX_NAME_LENGTH = Item::MAX_NAME_LENGTH;
 
-    private $id;
     private $name;
 
     public function __construct(
@@ -25,6 +27,7 @@ class UpdateItemQuantityDto
             notInRangeMessage: 'Quantity must be between {{ min }} and {{ max }}'
         )]
         #[Groups(["updateQuantity"])]
+        #[OA\Property(example: 10)]
         public readonly int $quantity,
     ) {
     }
@@ -36,21 +39,25 @@ class UpdateItemQuantityDto
 
     public function setName(string $name): self
     {
-        if (strlen($name) < Item::MIN_NAME_LENGTH || strlen($name) > Item::MAX_NAME_LENGTH) {
-            throw new \InvalidArgumentException('Name must be between ' . Item::MIN_NAME_LENGTH . ' and ' . Item::MAX_NAME_LENGTH . ' characters');
-        }
         $this->name = $name;
+        $this->validate();
         return $this;
     }
 
-    public function setId(int $id): self
+    private function validate(): void
     {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        if (empty($this->name)) {
+            throw new \InvalidArgumentException('Name cannot be empty');
+        }
+        if (strlen($this->name) < self::MIN_NAME_LENGTH || strlen($this->name) > self::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException(
+                'Name must be between ' . self::MIN_NAME_LENGTH . ' and ' . self::MAX_NAME_LENGTH . ' characters'
+            );
+        }
+        if ($this->quantity < self::MIN_QUANTITY || $this->quantity > self::MAX_QUANTITY) {
+            throw new \InvalidArgumentException(
+                'Quantity must be between ' . self::MIN_QUANTITY . ' and ' . self::MAX_QUANTITY
+            );
+        }
     }
 }
