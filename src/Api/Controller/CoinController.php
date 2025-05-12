@@ -34,13 +34,19 @@ class CoinController extends BaseController
     ): JsonResponse
     {
         $errors = $validator->validate($dto, null, ['Default', 'create']);
+
         if (count($errors) > 0) {
-            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json(['error' => $errors->get(0)->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $credit = $insertCoinUseCase->execute($dto);
+        $insertedCoinBalance = $insertCoinUseCase->execute($dto);
 
-        return $this->json(["inserted_amount" => $credit]);
+        return $this->json(
+            [
+                'message' => $dto->coin.' inserted successfully',
+                'accumulated_amount' => $insertedCoinBalance,
+            ],
+            Response::HTTP_OK);
     }
 
     /****************************************************

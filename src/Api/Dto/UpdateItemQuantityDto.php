@@ -30,7 +30,6 @@ class UpdateItemQuantityDto
         #[OA\Property(example: 10)]
         public readonly int $quantity,
     ) {
-        $this->validate();
     }
 
     public function getName(): ?string
@@ -46,6 +45,7 @@ class UpdateItemQuantityDto
             );
         }
         $this->name = $name;
+        $this->validate();
         return $this;
     }
 

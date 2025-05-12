@@ -47,7 +47,7 @@ class CoinControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(round($originalAmount + $addAmount, 2), round( $response['inserted_amount'],2));
+        $this->assertEquals(round($originalAmount + $addAmount, 2), round( $response['accumulated_amount'],2));
     }
 
     public function testReturnCoin(): void

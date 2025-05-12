@@ -3,6 +3,7 @@
 namespace App\Api\Dto;
 
 use App\Domain\ValueObject\Coin;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -21,6 +22,7 @@ class InsertCoinDto
             message: 'Invalid coin value. Allowed values are: {{ choices }}'
         )]
         #[Groups(["create"])]
+        #[OA\Property(example: 0.25)]
         public readonly float $coin,
     ) {
     }
