@@ -78,6 +78,11 @@ class Item {
         return $this;
     }
 
+    public function getPriceAsFloat(): float
+    {
+        return round($this->price / 100, 2);
+    }
+
     public function getQuantity(): int
     {
         return $this->quantity;
@@ -91,5 +96,12 @@ class Item {
         $this->quantity = $quantity;
 
         return $this;
+    }
+
+    public function decreaseQuantity(int $amount): void
+    {
+        $currentQuantity = $this->getQuantity();
+        $newQuantity = $currentQuantity - $amount;
+        $this->setQuantity($newQuantity);
     }
 }
