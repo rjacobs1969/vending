@@ -6,6 +6,10 @@ use App\Domain\Entity\Item;
 
 class ItemViewModel
 {
+    public const FIELD_NAME = 'name';
+    public const FIELD_PRICE = 'price';
+    public const FIELD_QUANTITY = 'quantity_available';
+
     public function __construct(
         public readonly int $id,
         public readonly string $name,
@@ -19,9 +23,9 @@ class ItemViewModel
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'price' => $this->formatPrice($this->price),
-            'quantity_available' => $this->quantity,
+            self::FIELD_NAME => $this->name,
+            self::FIELD_PRICE => $this->formatPrice($this->price),
+            self::FIELD_QUANTITY => $this->quantity,
         ];
     }
 

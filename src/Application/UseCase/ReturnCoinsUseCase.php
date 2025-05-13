@@ -9,20 +9,17 @@ use App\Domain\Repository\TransactionRepository;
 
 final class ReturnCoinsUseCase
 {
-    public function __construct(private TransactionRepository $repository)
-    {
-    }
+    public function __construct(private TransactionRepository $repository) {}
 
     public function execute(): VendViewModel
     {
         $insertedCoinCollection = $this->repository->fetchTransaction();
         $returnCoinCollection = new ReturnCoinCollection($insertedCoinCollection->returnAllCoins());
         $this->repository->saveTransaction($insertedCoinCollection);
-
         return VendViewModel::fromCoinItemMessage(
             CoinListViewModel::fromCoinCollection($returnCoinCollection),
             null,
-            $returnCoinCollection->empty() ? VendViewModel::MESSAGE_NO_RETURN_COINS : VendViewModel::MESSAGE_RETURN_COINS
+            $returnCoinCollection->hasCoins() ? VendViewModel::MESSAGE_RETURN_COINS : VendViewModel::MESSAGE_NO_RETURN_COINS
         );
     }
 }

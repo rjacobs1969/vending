@@ -8,10 +8,7 @@ use App\Domain\Repository\ItemRepository;
 
 final class UpdateItemQuantityUseCase
 {
-    public function __construct(
-        private ItemRepository $repository,
-    ) {
-    }
+    public function __construct(private ItemRepository $repository) {}
 
     public function execute(UpdateItemQuantityDto $updateItemQuantityDto): ?ItemViewModel
     {

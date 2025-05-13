@@ -9,10 +9,7 @@ use App\Domain\ValueObject\Coin;
 
 final class UpdateChangeCoinQuantityUseCase
 {
-    public function __construct(
-        private ChangeCoinRepository $repository,
-    ) {
-    }
+    public function __construct(private ChangeCoinRepository $repository) {}
 
     public function execute(UpdateChangeCoinQuantityDto $dto): ChangeCoinViewModel
     {

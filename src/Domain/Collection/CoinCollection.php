@@ -27,6 +27,11 @@ class CoinCollection implements \IteratorAggregate {
         $this->coins = [];
     }
 
+    public function hasCoins(): int
+    {
+        return count($this->coins) > 0;
+    }
+
     public function totalAmount(): float {
         $sum = array_reduce($this->coins, fn($sum, $coin) => $sum + $coin->asFloat(), 0);
 

@@ -42,5 +42,4 @@ class ItemControllerTest extends WebTestCase
             $content
         );
     }
-
 }

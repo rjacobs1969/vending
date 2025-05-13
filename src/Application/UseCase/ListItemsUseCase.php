@@ -7,10 +7,7 @@ use App\Domain\Repository\ItemRepository;
 
 final class ListItemsUseCase
 {
-    public function __construct(
-        private ItemRepository $repository,
-    ) {
-    }
+    public function __construct(private ItemRepository $repository) {}
 
     public function execute(): ItemListViewModel
     {

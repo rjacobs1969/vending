@@ -31,4 +31,18 @@ class InsertCoinDto
     {
         return Coin::fromCurrencyValue($this->coin);
     }
+
+    public function coinValue(): float
+    {
+        return $this->coin;
+    }
+
+    public function validateCoinValue(): void
+    {
+        if (!in_array($this->coin, self::ALLOWED_COIN_VALUES)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid coin value: %s. Allowed values are: %s', $this->coin, implode(', ', self::ALLOWED_COIN_VALUES))
+            );
+        }
+    }
 }

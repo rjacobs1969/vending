@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller\Api;
 
+use App\Application\ViewModel\Vend\VendViewModel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,7 +48,10 @@ class CoinControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(round($originalAmount + $addAmount, 2), round( $response['accumulated_amount'],2));
+        $this->assertEquals(
+            round($originalAmount + $addAmount, 2),
+            round($response[VendViewModel::FIELD_TOTAL_INSERTED_AMOUNT], 2)
+        );
     }
 
     public function testReturnCoin(): void
@@ -56,8 +60,8 @@ class CoinControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('coins', $response);
-        $this->assertNotEmpty($response['coins']);
+        $this->assertArrayHasKey(VendViewModel::FIELD_COINS, $response);
+        $this->assertNotEmpty($response[VendViewModel::FIELD_COINS]);
     }
 
     private function doRequest(string $url, string $content, string $requestMethod = 'POST'): void

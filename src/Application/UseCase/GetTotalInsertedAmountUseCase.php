@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCase;
 
+use App\Application\ViewModel\Vend\VendViewModel;
 use App\Domain\Repository\TransactionRepository;
 
 final class GetTotalInsertedAmountUseCase
@@ -11,10 +12,13 @@ final class GetTotalInsertedAmountUseCase
     ) {
     }
 
-    public function execute(): float
+    public function execute(): VendViewModel
     {
         $insertedCoinCollection = $this->repository->fetchTransaction();
 
-        return $insertedCoinCollection->totalAmount();
+        return VendViewModel::fromMessage(
+            VendViewModel::MESSAGE_TOTAL_INSERTED_AMOUNT,
+            $insertedCoinCollection->totalAmount()
+        );
     }
 }

@@ -34,27 +34,8 @@ abstract class BaseController extends AbstractController
         return new JsonResponse($json, $status, $headers, true);
     }
 
-    /**
-     * Returns a JsonResponse that uses the serializer component if enabled, or json_encode.
-     *
-     * @param int $status The HTTP status code (200 "OK" by default)
-     */
-    protected function jsonWithGroups(mixed $data, array $groups = [], int $status = 200, array $headers = []): JsonResponse
+    protected function fatalErrorResponse(string $message = 'Something wend wrong'): JsonResponse
     {
-        $context = [...$this->jsonContext];
-        $context['groups'] = [...$context['groups'], ...$groups];
-        return $this->json($data, $status, $headers, $context);
-    }
-
-    /**
-     * Returns a JsonResponse that uses the serializer component if enabled, or json_encode.
-     *
-     * @param int $status The HTTP status code (200 "OK" by default)
-     */
-    protected function jsonWithOnlyGroups(mixed $data, array $groups = [], int $status = 200, array $headers = []): JsonResponse
-    {
-        $context = [...$this->jsonContext];
-        $context['groups'] = $groups;
-        return $this->json($data, $status, $headers, $context);
+        return $this->json(['error' => $message], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
