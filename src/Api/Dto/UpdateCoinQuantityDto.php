@@ -13,7 +13,6 @@ class UpdateCoinQuantityDto
     private const ALLOWED_COIN_VALUES = [0.05, 0.10, 0.25];
 
     public function __construct(
-
         #[Assert\Type(
             type: 'float',
             message: 'Coin must be an float value'

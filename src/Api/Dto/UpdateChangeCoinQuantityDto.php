@@ -13,7 +13,6 @@ class UpdateChangeCoinQuantityDto
     private const MAX_QUANTITY = 999;
 
     public function __construct(
-
         #[Assert\Type(
             type: 'float',
             message: 'Coin must be a float value'

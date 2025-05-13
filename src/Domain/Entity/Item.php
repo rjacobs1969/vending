@@ -9,7 +9,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: DoctrineItemRepository::class)]
 #[ORM\Table(name: "items")]
 class Item {
-    // Domain constraints
     public const MIN_NAME_LENGTH = 3;
     public const MAX_NAME_LENGTH = 128;
     public const MIN_PRICE = 5;

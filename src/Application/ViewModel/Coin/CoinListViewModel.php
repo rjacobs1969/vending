@@ -8,9 +8,7 @@ use App\Domain\ValueObject\Coin;
 
 class CoinListViewModel
 {
-    public function __construct(private array $coinViewModels)
-    {
-    }
+    public function __construct(private array $coinViewModels) {}
 
     public function toArray(): array
     {

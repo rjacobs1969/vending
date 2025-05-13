@@ -67,10 +67,13 @@ class CoinController extends BaseController
     #[OA\Response(response: Response::HTTP_OK, description: 'Success')]
     #[OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: 'Something went wrong')]
     #[OA\Get(summary: 'Get inserted amount', description: 'Get the total amount of the currently inserted coins', operationId: 'getCoin')]
-    public function viewCoin(GetTotalInsertedAmountUseCase $getTotalInsertedAmountUse): JsonResponse
+    public function viewCoin(GetTotalInsertedAmountUseCase $getTotalInsertedAmountUseCase): JsonResponse
     {
-        $result = $getTotalInsertedAmountUse->execute();
-
-        return $this->json([VendViewModel::FIELD_TOTAL_INSERTED_AMOUNT => $result]);
+        try {
+            $result = $getTotalInsertedAmountUseCase->execute();
+            return $this->json([VendViewModel::FIELD_TOTAL_INSERTED_AMOUNT => $result]);
+        } catch (Throwable $e) {
+            return $this->fatalErrorResponse($e->getMessage());
+        }
     }
 }

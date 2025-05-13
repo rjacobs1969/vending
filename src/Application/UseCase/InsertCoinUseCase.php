@@ -26,7 +26,7 @@ final class InsertCoinUseCase
                 $insertedCoinCollection->totalAmount()
             );
         } catch (\InvalidArgumentException) {
-            // return the invalid coin to the user
+            // return the invalid coin to the user, just like a real vending machine
             return VendViewModel::fromCoinItemMessage(
                 new CoinListViewModel([new CoinViewModel((string) $insertCoinDto->coinValue())]),
                 null,

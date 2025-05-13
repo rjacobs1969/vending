@@ -6,9 +6,7 @@ use App\Domain\ValueObject\Coin;
 
 class CoinViewModel
 {
-    public function __construct(
-        public readonly string $coinValue,
-    ) {}
+    public function __construct(public readonly string $coinValue) {}
 
     public function toString(): string
     {

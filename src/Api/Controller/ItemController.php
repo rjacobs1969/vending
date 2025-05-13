@@ -27,9 +27,12 @@ class ItemController extends BaseController
     #[OA\Get( description: 'List of items with price and availability', operationId: 'getItems', summary: 'List items')]
     public function getItems( ListItemsUseCase $listItemsUseCase ): JsonResponse
     {
-        $items = $listItemsUseCase->execute();
-
-        return $this->json($items->toArray());
+        try {
+            $items = $listItemsUseCase->execute();
+            return $this->json($items->toArray());
+        } catch (Throwable $e) {
+            return $this->fatalErrorResponse($e->getMessage());
+        }
     }
 
     /**********************
@@ -51,14 +54,14 @@ class ItemController extends BaseController
         try {
             $dto->setName($name);
             $item = $updateItemQuantityUseCase->execute($dto);
+            if ($item === null) {
+                return $this->json(['error' => sprintf('Item %s not found', $name)], Response::HTTP_NOT_FOUND);
+            }
+            return $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (Throwable) {
-            return $this->json(['error' => 'Something wend wrong'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (Throwable $e) {
+            return $this->fatalErrorResponse($e->getMessage());
         }
-
-        return $item === null
-                ? $this->json(['error' => sprintf('Item %s not found', $name)], Response::HTTP_NOT_FOUND)
-                : $this->json($item->toArray(), Response::HTTP_OK, [], $this->jsonContext);
     }
 }

@@ -6,9 +6,7 @@ use App\Domain\Entity\Item;
 
 class ItemListViewModel
 {
-    public function __construct(private array $itemViewModels)
-    {
-    }
+    public function __construct(private array $itemViewModels) {}
 
     public function toArray(): array
     {
