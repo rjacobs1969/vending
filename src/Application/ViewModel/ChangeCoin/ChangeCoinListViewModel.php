@@ -6,21 +6,22 @@ use App\Domain\Collection\ChangeCoinCollection;
 
 class ChangeCoinListViewModel
 {
-    public function __construct(private array $changeCoinViewModels)
-    {
-    }
+    public const FIELD_COINS = 'coins';
+    public const FIELD_TOTAL_VALUE = 'total_value';
+
+    public function __construct(private array $changeCoinViewModels) {}
 
     public function toArray(): array
     {
         return [
-            'coins' => array_map(
+            self::FIELD_COINS => array_map(
                 fn (ChangeCoinViewModel $coin) => $coin->toArray(),
                 array_filter(
                     $this->changeCoinViewModels,
                     fn ($coin) => $coin instanceof ChangeCoinViewModel
                 )
             ),
-            'total_value' => $this->totalAmount(),
+            self::FIELD_TOTAL_VALUE => $this->totalAmount(),
         ];
     }
 

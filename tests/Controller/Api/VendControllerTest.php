@@ -18,7 +18,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemWithExactAmount(): void
     {
-        $this->prepareInventory(['water' => 1], ['0.05' => 10], [0.25, 0.25, 0.1, 0.05]);
+        $this->prepareInventory(
+            ['water' => 1],         // Item name and available quantity
+            ['0.05' => 5],          // Change coins available
+            [0.25, 0.25, 0.1, 0.05] // Coins inserted (0.65 => the price of water)
+        );
 
         $this->doRequest("/api/vend", '{"item": "water"}');
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -34,7 +38,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemWithChange(): void
     {
-        $this->prepareInventory(['water' => 1], ["0.25" => 0, "0.1" => 0, "0.05" => 25], [0.25, 0.25, 0.25, 0.1, 0.05]);
+        $this->prepareInventory(
+            ['water' => 1],                             // Item name and available quantity
+            ["0.25" => 0, "0.1" => 0, "0.05" => 25],    // Change coins available
+            [0.25, 0.25, 0.25, 0.1, 0.05]               // Coins inserted (0.90, 0.25 more than price of water)
+        );
 
         $this->doRequest("/api/vend", '{"item": "water"}');
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -51,7 +59,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemWithNotEnoughMoney(): void
     {
-        $this->prepareInventory(['water' => 1], ['0.05' => 10], [0.25, 0.25, 0.1]);
+        $this->prepareInventory(
+            ['water' => 1],
+            ['0.05' => 10],
+            [0.25, 0.25, 0.1]   // Coins inserted (0.60, 0.05 less than price of water)
+        );
 
         $this->doRequest("/api/vend", '{"item": "water"}');
         $this->assertEquals(Response::HTTP_PAYMENT_REQUIRED, $this->client->getResponse()->getStatusCode());
@@ -59,7 +71,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemWithNotEnoughChange(): void
     {
-        $this->prepareInventory(['water' => 1], ['0.25' => 0, '0.1' => 0, '0.05' => 1], [0.25, 0.25, 0.25]);
+        $this->prepareInventory(
+            ['water' => 1],
+            ['0.25' => 0, '0.1' => 0, '0.05' => 1],
+            [0.25, 0.25, 0.25]
+        );
 
         $this->doRequest("/api/vend", '{"item": "water"}');
         $this->assertEquals(Response::HTTP_CONFLICT, $this->client->getResponse()->getStatusCode());
@@ -67,7 +83,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemNotFound(): void
     {
-        $this->prepareInventory(['water' => 1], [], [0.25, 0.25, 0.25]);
+        $this->prepareInventory(
+            ['water' => 1],
+            [],
+            [0.25, 0.25, 0.25]
+        );
 
         $this->doRequest("/api/vend", '{"item": "this_item_does_not_exist"}');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
@@ -75,7 +95,11 @@ class VendControllerTest extends WebTestCase
 
     public function testVendItemNotAvailable(): void
     {
-        $this->prepareInventory(['Water' => 0, 'juice' => 0], [], [0.25, 0.25, 0.1, 0.05]);
+        $this->prepareInventory(
+            ['juice' => 0],
+            [],
+            [0.25, 0.25, 0.1, 0.05]
+        );
 
         $this->doRequest("/api/vend", '{"item": "juice"}');
         $this->assertEquals(Response::HTTP_SERVICE_UNAVAILABLE, $this->client->getResponse()->getStatusCode());
@@ -110,7 +134,6 @@ class VendControllerTest extends WebTestCase
 
         $this->client->request('GET', '/api/change', [], [], ['CONTENT_TYPE' => 'application/json']);
         $response = json_decode($this->client->getResponse()->getContent(), true);
-
     }
 
     private function doRequest(string $url, string $content, string $requestMethod = 'POST'): void

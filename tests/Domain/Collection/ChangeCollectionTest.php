@@ -93,19 +93,18 @@ class ChangeCoinCollectionTest extends TestCase
         $this->assertEquals(0.05, $change[3]->asFloat());
     }
 
-    public function testProvideChangeWithInsufficientCoins(): void
+    public function testProvideChangeWithSmallerCoinsIfThereAreNoBigCoins(): void
     {
-      /*  $this->expectException(\InvalidArgumentException::class);
-
         $collection = new ChangeCoinCollection();
-        $coin1 = Coin::fromCurrencyValue(0.25);
-        $coin2 = Coin::fromCurrencyValue(0.10);
-        $coin3 = Coin::fromCurrencyValue(0.05);
-        $collection->setCoinAmount($coin1, 1);
-        $collection->setCoinAmount($coin2, 1);
-        $collection->setCoinAmount($coin3, 1);
+        $collection->setCoinAmount(Coin::fromCurrencyValue(0.25), 0);
+        $collection->setCoinAmount(Coin::fromCurrencyValue(0.10), 2);
+        $collection->setCoinAmount(Coin::fromCurrencyValue(0.05), 10);
 
-        $change = $collection->provideChange(0.65);
-        print_r($change);*/
+        $change = $collection->provideChange(0.30);
+        $this->assertCount(4, $change);
+        $this->assertEquals(0.10, $change[0]->asFloat());
+        $this->assertEquals(0.10, $change[1]->asFloat());
+        $this->assertEquals(0.05, $change[2]->asFloat());
+        $this->assertEquals(0.05, $change[3]->asFloat());
     }
 }
