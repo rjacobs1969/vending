@@ -6,13 +6,14 @@ use App\Api\Dto\InsertCoinDto;
 use App\Application\UseCase\GetTotalInsertedAmountUseCase;
 use App\Application\UseCase\InsertCoinUseCase;
 use App\Application\UseCase\ReturnCoinsUseCase;
+use App\Application\ViewModel\Vend\VendViewModel;
 use App\Shared\Controller\BaseController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use OpenApi\Attributes as OA;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 class CoinController extends BaseController
 {
@@ -30,23 +31,14 @@ class CoinController extends BaseController
     public function insertCoin(
         #[MapRequestPayload(validationGroups: ['create'])] InsertCoinDto $dto,
         InsertCoinUseCase $insertCoinUseCase,
-        ValidatorInterface $validator,
     ): JsonResponse
     {
-        $errors = $validator->validate($dto, null, ['Default', 'create']);
-
-        if (count($errors) > 0) {
-            return $this->json(['error' => $errors->get(0)->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        try {
+            $result = $insertCoinUseCase->execute($dto);
+            return $this->json($result->toArray(), $result->toStatus());
+        } catch (Throwable $e) {
+            return $this->fatalErrorResponse($e->getMessage());
         }
-
-        $insertedCoinBalance = $insertCoinUseCase->execute($dto);
-
-        return $this->json(
-            [
-                'message' => $dto->coin.' inserted successfully',
-                'accumulated_amount' => $insertedCoinBalance,
-            ],
-            Response::HTTP_OK);
     }
 
     /****************************************************
@@ -59,9 +51,12 @@ class CoinController extends BaseController
     #[OA\Post(summary: 'Return coins', description: 'Return all coins inserted into the vending machine',operationId: 'returnCoin')]
     public function returnCoin(ReturnCoinsUseCase $returnCoinsUseCase): JsonResponse
     {
-        $response = $returnCoinsUseCase->execute();
-
-        return $this->json($response->toArray());
+        try {
+            $result = $returnCoinsUseCase->execute();
+            return $this->json($result->toArray(), $result->toStatus());
+        } catch (Throwable $e) {
+            return $this->fatalErrorResponse($e->getMessage());
+        }
     }
 
     /******************************************************
@@ -74,8 +69,8 @@ class CoinController extends BaseController
     #[OA\Get(summary: 'Get inserted amount', description: 'Get the total amount of the currently inserted coins', operationId: 'getCoin')]
     public function viewCoin(GetTotalInsertedAmountUseCase $getTotalInsertedAmountUse): JsonResponse
     {
-        $credit = $getTotalInsertedAmountUse->execute();
+        $result = $getTotalInsertedAmountUse->execute();
 
-        return $this->json(["inserted_amount" => $credit]);
+        return $this->json([VendViewModel::FIELD_TOTAL_INSERTED_AMOUNT => $result]);
     }
 }
