@@ -39,6 +39,12 @@ services:
         arguments:
             $environment: 'test'
 
+    # Change Coin Repository for Test Environment
+    App\Domain\Repository\ChangeCoinRepository:
+        class: App\Infrastructure\Persistence\Repository\RedisChangeCoinRepository
+        arguments:
+            $environment: 'test'
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
