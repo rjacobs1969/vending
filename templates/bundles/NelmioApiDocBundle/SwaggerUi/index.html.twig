@@ -5,31 +5,29 @@
 <style>
     .swagger-ui textarea {
         min-height: 75px;
-        resize: none; /* Disable manual resizing */
-        overflow-y: hidden; /* Hide scrollbar when not needed */
+        resize: none;
+        overflow-y: hidden;
     }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".swagger-ui textarea").forEach(textarea => {
             textarea.addEventListener("input", function () {
-                this.style.height = "auto"; // Reset height
-                this.style.height = this.scrollHeight + "px"; // Expand based on content
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
             });
         });
     });
 </script>
 {% endblock %}
 
-
 {% block swagger_initialization %}
-<script type="text/javascript">
-    window.onload = () => {
-        loadSwaggerUI({
-            defaultModelsExpandDepth: -1,
-            deepLinking: true,
-            tryItOutEnabled: true // Enables "Try it out" by default
-        });
-    };
-</script>
+    <script type="text/javascript">
+        window.onload = function() {
+            loadSwaggerUI({
+                tryItOutEnabled: true
+                // You can add other config options here if needed
+            });
+        };
+    </script>
 {% endblock %}

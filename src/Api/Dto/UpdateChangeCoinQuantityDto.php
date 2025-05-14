@@ -6,6 +6,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+
 class UpdateChangeCoinQuantityDto
 {
     private const VALID_COIN_VALUES = [0.05, 0.10, 0.25];
@@ -34,6 +35,7 @@ class UpdateChangeCoinQuantityDto
         )]
         #[Groups(["update"])]
         #[OA\Property(example: 10)]
+
         public readonly int $quantity,
     ) {
     }

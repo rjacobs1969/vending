@@ -29,7 +29,7 @@ class CoinController extends BaseController
     #[OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR,description: 'Something went wrong')]
     #[OA\Post(summary: 'Insert a coin', description: 'Insert a coin into the vending machine', operationId: 'insertCoin')]
     public function insertCoin(
-        #[MapRequestPayload(validationGroups: ['create'])] InsertCoinDto $dto,
+        #[MapRequestPayload(validationGroups:['create'])] InsertCoinDto $dto,
         InsertCoinUseCase $insertCoinUseCase,
     ): JsonResponse
     {
