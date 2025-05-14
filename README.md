@@ -2,7 +2,17 @@
 
 A PHP coding exercise.
 
-## Instruction how to run the environment
+# Checkout
+
+```bash
+git clone git@github.com:rjacobs1969/vending.git
+```
+
+```bash
+cd vending
+```
+
+## How to run the environment
 
 First run,
 
@@ -26,6 +36,6 @@ make test
 ```
 # Usage
 
-After running the docker,the API can be found at http://127.0.0.1/api/docs
+After running the docker, the easiest way to use the API is with the Open API web interface located  as http://localhost/api/doc
 
 
