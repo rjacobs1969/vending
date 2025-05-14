@@ -81,7 +81,7 @@ exit the docker container
 exit
 ```
 
-Now the new item will be available in the vending machine just as water, juice and soda
+Now the new item will be available in the vending machine. It can be managed and vended just as water, juice and soda
 
 # Examples using Curl to send request
 
