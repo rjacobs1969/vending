@@ -13,28 +13,22 @@ git clone git@github.com:rjacobs1969/vending.git
 cd vending
 ```
 
-## How to run the environment
+## How to run the environment for the first time
 
-First run,
-
+First run, This will download the docker containers, install all dependencies, initialize the database.
 ```bash
 make init up
 ```
 
-After that daily stopping
-```bash
-make down
-```
+After the initial start, its not necessary to use init every time you want to start the environment. you can use "make down" to stop & "make up" to start the environment
 
-and starting
-```bash
-make up
-```
+# Tests
 
-To run the unit tests
+To run the tests
 ```bash
 make test
 ```
+
 # Usage (Nelmio Open API interface)
 
 After running the docker, the easiest way to use the API is with the Open API web interface located  as http://localhost/api/doc
