@@ -57,7 +57,8 @@ I decided on the following additional behavior
 - Coins inserted into the machine by the user are NEVER added to the collection of available change. (they are typically collected and an unordered cash box separate from the change coins dispenser)
 - If a user inserts a coin with a value that's not accepted by machine it will immediate return it
 - "Return coins" can only return ALL inserted coins, never in part
-- if there is not enough change available when selecting an item the item will not be vended, it will inform you will have to insert the exact amount.
+- If there is not enough change available when selecting an item the item will not be vended, it will inform you will have to insert the exact amount
+- Change will be provided by using the minimum amount of coins, it will use 0.25 coins first, then 0.10 then 0.05. If a larger value isn't available anymore it will be substituted by multiple smaller value coins.
 
 # BONUS
 
